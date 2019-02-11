@@ -6,14 +6,14 @@
 namespace trienode_project{
 
 const int ALPHABET_SIZE = 26;
-const int MAX_WORD_SIZE = 20;
+//const int MAX_WORD_SIZE = 20;
 
 class TrieNode 
 {
   public:
     /* Default constructor*/
     TrieNode():isEndOfWord{false}{
-        for(size_t i{0}; i < ALPHABET_SIZE; ++i){
+        for(size_t i = 0; i < ALPHABET_SIZE; ++i){
           children[i] = nullptr;
         }
     };
