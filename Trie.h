@@ -40,7 +40,19 @@ class Trie
         return true;
     };
 
-    bool Contains(std::string word_);
+    bool Contains(std::string word_){
+        trienode_project::TrieNode * temp_ = root_;
+        for(size_t i = 0; i < word_.length(); ++i){
+            int letter_ = word_[i] - 'a';
+            /* Word doesn't exist in trie tree*/
+            if(temp_->children[letter_] == nullptr){
+                return false;
+            }
+            temp_ = temp_->children[letter_];
+        }
+        return(temp_->isEndOfWord);
+
+    };
     /* empties Trie of all nodes but dummy root, set word count to zero*/
     void Clear();
     /* returns number of words in trie*/

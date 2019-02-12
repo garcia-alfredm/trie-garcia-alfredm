@@ -21,7 +21,22 @@ int main(int argc, char **argv){
     assert(my_trie.Insert("sun"));
     assert(my_trie.Insert("moon"));
     
-    my_trie.Print();
+    //my_trie.Print();
+    assert(my_trie.Contains("apple"));
+    assert(my_trie.Contains("abe"));
+    assert(my_trie.Contains("bat"));
+    assert(my_trie.Contains("bark"));
+    assert(my_trie.Contains("bag"));
+    assert(my_trie.Contains("brother"));
+    assert(my_trie.Contains("cat"));
+    assert(my_trie.Contains("dad"));
+    assert(my_trie.Contains("fun"));
+    assert(my_trie.Contains("jump"));
+    assert(my_trie.Contains("aardvark"));
+    assert(my_trie.Contains("custered"));
+    assert(my_trie.Contains("sun"));
+    assert(my_trie.Contains("moon"));
+
     std::cout << "All done!\n";
 
     return 0;
