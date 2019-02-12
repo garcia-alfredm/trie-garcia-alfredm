@@ -49,10 +49,18 @@ class Trie
     unsigned int CountNodes();
 
     void Print(){
-        Print(root_);
+        for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
+            if(root_->children[i] == nullptr){
+                continue;
+            }
+            std::string word_{};
+            int letter_ = i + int('a');
+            word_ = word_ + char(letter_);
+            Print(root_->children[i], word_);
+        }
     };
 
-    void Print(trienode_project::TrieNode * node, std::string word_ = std::string() ){
+    void Print(trienode_project::TrieNode * node, std::string & word_){
         /* If reached end of word */
         if(node->isEndOfWord){
             std::cout << word_ << " ";
@@ -62,8 +70,8 @@ class Trie
             /* If child index isn't nullptr, it has a value */
             if(node->children[i] != nullptr){
                 int letter_ = i + int('a');
-                word_ = word_ + char(letter_);
-                Print(node->children[i], word_);
+                std::string full_word = word_ + char(letter_);
+                Print(node->children[i], full_word);
             }
             else{
                 continue;
