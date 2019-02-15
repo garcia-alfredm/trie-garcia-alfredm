@@ -12,9 +12,16 @@ class Trie
   public:
     /* Default Constructor */
     Trie(){root_ = new trienode_project::TrieNode();}//: root_{new trienode_project::TrieNode()}{};
+    
     /* one paramter constructor using filestream to textfile */
+
     /* Destructor */
     ~Trie(){};
+
+    /* creates Trie using given dictionary file 
+     * if trie is already loaded, clear and reload
+     */ 
+    void load();
 
     bool Insert(const std::string & word_){
         trienode_project::TrieNode * temp_ = root_;
@@ -53,6 +60,14 @@ class Trie
         return(temp_->isEndOfWord);
 
     };
+
+    /* If given string is in Trie, remove and return true
+     * otherwires return false
+     */
+    bool remove(std::string & word_){
+        remove(word_, root_);
+    };
+
     /* empties Trie of all nodes but dummy root, set word count to zero*/
     void Clear();
     /* returns number of words in trie*/
@@ -72,8 +87,13 @@ class Trie
         }
     };
 
+
+
+  private:
+    trienode_project::TrieNode * root_;
+
     void Print(trienode_project::TrieNode * node, std::string & word_){
-        /* If reached end of word */
+    /* If reached end of word */
         if(node->isEndOfWord){
             std::cout << word_ << " ";
         }
@@ -91,8 +111,9 @@ class Trie
         }
     };
 
-  private:
-    trienode_project::TrieNode * root_;
+    bool remove(std::string & word_, trienode_project::TrieNode * node){
+
+    };
 
 };
 
