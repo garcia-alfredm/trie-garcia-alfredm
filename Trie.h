@@ -87,8 +87,6 @@ class Trie
         }
     };
 
-
-
   private:
     trienode_project::TrieNode * root_;
 
@@ -112,6 +110,8 @@ class Trie
     };
 
     bool remove(std::string & word_, trienode_project::TrieNode * node){
+        int letter_ = word_[0] - 'a';
+        remove(word_.substr(1,string::npos))
 
     };
 
