@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <utility>
 
 #include "TrieNode.h"
 
@@ -32,9 +33,8 @@ class Trie
 
             /* Make new node if path doesn't exist */
             if(temp_->children[letter_] == nullptr){
-                temp_->children[letter_] = new trienode_project::TrieNode();
+                temp_->children[letter_] = new trienode_project::TrieNode(temp_);
             }
-
             temp_ = temp_->children[letter_];
 
             /* if isEndOfWord is true and reached last letter, word exists */
@@ -58,14 +58,15 @@ class Trie
             temp_ = temp_->children[letter_];
         }
         return(temp_->isEndOfWord);
-
     };
 
     /* If given string is in Trie, remove and return true
      * otherwires return false
      */
-    bool remove(std::string & word_){
-        remove(word_, root_);
+    bool Remove(std::string & word_){
+        //int letter_ = word_[0] - 'a';
+        //word_ = word_.substr(1,std::string::npos);
+        return Remove(std::move(word_), root_); //->children[letter_]);
     };
 
     /* empties Trie of all nodes but dummy root, set word count to zero*/
@@ -89,7 +90,70 @@ class Trie
 
   private:
     trienode_project::TrieNode * root_;
+    
+    bool Remove(std::string && word_, trienode_project::TrieNode * & node){
+        /* There are five recursive conditions
+         * Where node isn't EOW and has child/ren: do nothing and return true
+         * Where node isn't EOW and has no children: delete node, recursive step back
+         * Where node IS EOW and has no childrn: delete node, recursive step back
+         * Where node is EOW AND has children: mark EOW false and return true
+         */
+        /* Node points to null, no such word*/
+        if(node == nullptr ){
+            std::cout << "No such word.\n";
+            return false;
+        }
+        /* If we have not reached end of word. check if node has children */
+        else if(node->isEndOfWord == false){
+            /* index for next value*/
+            int letter_ = word_[0] - 'a';
+            bool has_children = true;
 
+            /*Test if node has children*/
+            /* Use a helper function that determines if more than 2 children*/
+            for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
+                //avoid testing existing index
+                if(int(i) == letter_){ continue; }
+
+                else if(node->children[i] != nullptr){
+                    has_children = false;
+                    break;
+                }
+            }
+            //word_ = word_.substr(1);
+
+            /* Doesn't have children, can remove*/
+            if(!has_children){
+                Remove(word_.substr(1), node->children[letter_]);
+                delete node;
+                node = nullptr;
+            }
+            /*Has children, don't remove*/
+            else{
+                Remove(word_.substr(1), node->children[letter_]);
+                return true;
+            }
+        }
+        else if(node->isEndOfWord == true){
+            bool is_empty = true;
+            /*Test if EndOfWord node has child*/
+            for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
+                if(node->children[i] != nullptr){
+                    is_empty = false;
+                }
+            }
+            /* has no other child pointers */
+            if(is_empty == true){
+                delete node;
+            }
+            /* has other child pointers */
+            else{
+                node->isEndOfWord = false;
+                return true;
+            }
+        }
+    };
+    
     void Print(trienode_project::TrieNode * node, std::string & word_){
     /* If reached end of word */
         if(node->isEndOfWord){
@@ -108,13 +172,6 @@ class Trie
             }   
         }
     };
-
-    bool remove(std::string & word_, trienode_project::TrieNode * node){
-        int letter_ = word_[0] - 'a';
-        remove(word_.substr(1,string::npos))
-
-    };
-
 };
 
 }

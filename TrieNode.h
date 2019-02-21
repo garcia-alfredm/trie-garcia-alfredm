@@ -12,7 +12,7 @@ class TrieNode
 {
   public:
     /* Default constructor*/
-    TrieNode():isEndOfWord{false}{
+    TrieNode(TrieNode * node_parent = nullptr):parent{node_parent}, isEndOfWord{false}{
         for(size_t i = 0; i < ALPHABET_SIZE; ++i){
           children[i] = nullptr;
         }
@@ -21,7 +21,7 @@ class TrieNode
     //TrieNode(const T& data, Node next): data(data), next(next) {};
 
 
-    //TrieNode * parent;
+    TrieNode * parent;
     TrieNode * children[ALPHABET_SIZE];
     bool isEndOfWord;
     //std::vector<int> occurences;
