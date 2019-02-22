@@ -124,14 +124,13 @@ class Trie
 
             /* Doesn't have children, can remove*/
             if(!has_children){
-                Remove(word_.substr(1), node->children[letter_]);
+                return Remove(word_.substr(1), node->children[letter_]);
                 delete node;
                 node = nullptr;
             }
             /*Has children, don't remove*/
             else{
-                Remove(word_.substr(1), node->children[letter_]);
-                return true;
+                return Remove(word_.substr(1), node->children[letter_]);
             }
         }
         else if(node->isEndOfWord == true){
@@ -145,12 +144,13 @@ class Trie
             /* has no other child pointers */
             if(is_empty == true){
                 delete node;
+                node = nullptr;
             }
             /* has other child pointers */
             else{
                 node->isEndOfWord = false;
-                return true;
             }
+            return true;
         }
     };
     

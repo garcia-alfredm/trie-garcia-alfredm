@@ -6,7 +6,6 @@ int main(int argc, char **argv){
     //if(argc != 2){std::cout << "Usage: " << argv[0] << " wordfile\n"; return 0;}
     trietree_project::Trie my_trie;
     
-    /*
     assert(my_trie.Insert("apple"));
     assert(my_trie.Insert("abe"));
     assert(my_trie.Insert("bat"));
@@ -21,10 +20,14 @@ int main(int argc, char **argv){
     assert(my_trie.Insert("custered"));
     assert(my_trie.Insert("sun"));
     assert(my_trie.Insert("moon"));
-    */
-    /*
+
+
+    my_trie.Print();
+    std::string check = "abe";
+    my_trie.Remove(check); 
+
     assert(my_trie.Contains("apple"));
-    assert(my_trie.Contains("abe"));
+    assert(!my_trie.Contains("abe"));
     assert(my_trie.Contains("bat"));
     assert(my_trie.Contains("bark"));
     assert(my_trie.Contains("bag"));
@@ -37,15 +40,10 @@ int main(int argc, char **argv){
     assert(my_trie.Contains("custered"));
     assert(my_trie.Contains("sun"));
     assert(my_trie.Contains("moon"));
-    */
-    my_trie.Print();
-    std::string check = "bat";
-    bool success;
-    success = my_trie.Remove(check); 
     
-
-    std::cout << success << " All done!\n";
+    std::cout << std::endl;
     my_trie.Print(); 
+    std::cout << "\nAll done!\n";
 
     return 0;
 }
