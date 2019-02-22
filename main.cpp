@@ -17,7 +17,7 @@ int main(int argc, char **argv){
     assert(my_trie.Insert("fun"));
     assert(my_trie.Insert("jump"));
     assert(my_trie.Insert("aardvark"));
-    assert(my_trie.Insert("custered"));
+    assert(my_trie.Insert("custard"));
     assert(my_trie.Insert("sun"));
     assert(my_trie.Insert("moon"));
 
@@ -37,7 +37,7 @@ int main(int argc, char **argv){
     assert(my_trie.Contains("fun"));
     assert(my_trie.Contains("jump"));
     assert(my_trie.Contains("aardvark"));
-    assert(my_trie.Contains("custered"));
+    assert(my_trie.Contains("custard"));
     assert(my_trie.Contains("sun"));
     assert(my_trie.Contains("moon"));
     
