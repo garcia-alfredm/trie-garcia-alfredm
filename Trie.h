@@ -63,9 +63,7 @@ class Trie
     /* If given string is in Trie, remove and return true
      * otherwires return false
      */
-    bool Remove(std::string & word_){
-        //int letter_ = word_[0] - 'a';
-        //word_ = word_.substr(1,std::string::npos);
+    bool Remove(std::string && word_){
         return Remove(std::move(word_), root_); //->children[letter_]);
     };
 
@@ -93,63 +91,53 @@ class Trie
     
     bool Remove(std::string && word_, trienode_project::TrieNode * & node){
         /* There are five recursive conditions
-         * Where node isn't EOW and has child/ren: do nothing and return true
-         * Where node isn't EOW and has no children: delete node, recursive step back
-         * Where node IS EOW and has no childrn: delete node, recursive step back
-         * Where node is EOW AND has children: mark EOW false and return true
+         * node points to nullptr
+         * Node has children, is not end of word: call remove
+         * Node had children, is end of word: change isEndOfWord to false, return true
+         * Node doesn't have children, is not end of word: call remove, delete node
+         * Nodes doesn't have children, is end of word: delete node, return true
          */
+
         /* Node points to null, no such word*/
         if(node == nullptr ){
-            std::cout << "No such word.\n";
             return false;
         }
-        /* If we have not reached end of word. check if node has children */
-        else if(node->isEndOfWord == false){
-            /* index for next value*/
-            int letter_ = word_[0] - 'a';
-            bool has_children = true;
-
-            /*Test if node has children*/
-            /* Use a helper function that determines if more than 2 children*/
-            for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-                //avoid testing existing index
-                if(int(i) == letter_){ continue; }
-
-                else if(node->children[i] != nullptr){
-                    has_children = false;
-                    break;
-                }
-            };
-
-            /* Doesn't have children, can remove*/
-            if(!has_children){
-                return Remove(word_.substr(1), node->children[letter_]);
-                delete node;
-                node = nullptr;
+        // get current letter value
+        int letter_ = word_[0] - 'a';
+        //check if node has children
+        bool has_children = true;
+        for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
+            //avoid testing current index
+            if(int(i) == letter_){ continue; }
+            else if(node->children[i] != nullptr){
+                has_children = false;
+                break;
             }
-            /*Has children, don't remove*/
-            else{
+        };
+        //if node has children
+        if(has_children){
+            if(!node->isEndOfWord){
                 return Remove(word_.substr(1), node->children[letter_]);
             }
-        }
-        else if(node->isEndOfWord == true){
-            bool is_empty = true;
-            /*Test if EndOfWord node has child*/
-            for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-                if(node->children[i] != nullptr){
-                    is_empty = false;
-                }
-            }
-            /* has no other child pointers */
-            if(is_empty == true){
-                delete node;
-                node = nullptr;
-            }
-            /* has other child pointers */
+            //is end of word
             else{
                 node->isEndOfWord = false;
+                return true;
             }
-            return true;
+        }
+        //does not have children
+        else{
+            if(!node->isEndOfWord){
+                return Remove(word_.substr(1), node->children[letter_]);
+                delete node;
+                node = nullptr;
+            }
+            //is end of word
+            else{
+               delete node;
+               node = nullptr;
+               return true; 
+            }
         }
     };
     
