@@ -23,6 +23,7 @@ int main(int argc, char **argv){
 
 
     my_trie.Print();
+    std::cout << my_trie.NumWords() << std::endl;
     my_trie.Remove("abe");
     my_trie.Remove("jump");
     my_trie.Remove("cat");
@@ -45,6 +46,7 @@ int main(int argc, char **argv){
     std::cout << std::endl;
     my_trie.Print(); 
     assert(!my_trie.Remove("castle"));
+    std::cout << my_trie.NumWords(); 
     std::cout << "\nAll done!\n";
 
     return 0;

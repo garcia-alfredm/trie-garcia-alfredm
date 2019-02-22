@@ -12,7 +12,7 @@ class Trie
 {
   public:
     /* Default Constructor */
-    Trie(){root_ = new trienode_project::TrieNode();}//: root_{new trienode_project::TrieNode()}{};
+    Trie(): root_{new trienode_project::TrieNode()}, number_of_words{0} {};
     
     /* one paramter constructor using filestream to textfile */
 
@@ -22,7 +22,7 @@ class Trie
     /* creates Trie using given dictionary file 
      * if trie is already loaded, clear and reload
      */ 
-    void load();
+    void Load();
 
     bool Insert(const std::string & word_){
         trienode_project::TrieNode * temp_ = root_;
@@ -39,11 +39,12 @@ class Trie
 
             /* if isEndOfWord is true and reached last letter, word exists */
             if(i == word_.length() && temp_->isEndOfWord == true){
-              return false;
+                return false;
             }
         }
         /* Mark last node as EndOfWord */
         temp_->isEndOfWord = true;
+        ++number_of_words;
         return true;
     };
 
@@ -70,7 +71,8 @@ class Trie
     /* empties Trie of all nodes but dummy root, set word count to zero*/
     void Clear();
     /* returns number of words in trie*/
-    unsigned int NumWords();
+    inline unsigned int NumWords(){ return number_of_words; };
+    
     /* returns number of nodes that have been made in trie but root, calculated on demand*/
     unsigned int CountNodes();
 
@@ -88,6 +90,7 @@ class Trie
 
   private:
     trienode_project::TrieNode * root_;
+    unsigned int number_of_words;
     
     bool Remove(std::string && word_, trienode_project::TrieNode * & node){
         /* There are five recursive conditions
@@ -122,6 +125,7 @@ class Trie
             //is end of word
             else{
                 node->isEndOfWord = false;
+                --number_of_words;
                 return true;
             }
         }
@@ -136,6 +140,7 @@ class Trie
             else{
                delete node;
                node = nullptr;
+               --number_of_words;
                return true; 
             }
         }
