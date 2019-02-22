@@ -119,8 +119,7 @@ class Trie
                     has_children = false;
                     break;
                 }
-            }
-            //word_ = word_.substr(1);
+            };
 
             /* Doesn't have children, can remove*/
             if(!has_children){
