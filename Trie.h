@@ -48,7 +48,7 @@ class Trie
         return true;
     };
 
-    bool Contains(std::string word_){
+    bool Contains(const std::string & word_) const{
         trienode_project::TrieNode * temp_ = root_;
         for(size_t i = 0; i < word_.length(); ++i){
             int letter_ = word_[i] - 'a';
@@ -69,22 +69,34 @@ class Trie
     };
 
     /* empties Trie of all nodes but dummy root, set word count to zero*/
-    void Clear();
+    void Clear(){
+        Clear(root_);
+        number_of_words = 0;
+        root_ = new trienode_project::TrieNode();
+        return;
+    };
     /* returns number of words in trie*/
-    inline unsigned int NumWords(){ return number_of_words; };
+    inline unsigned int NumWords() const { return number_of_words; };
     
-    /* returns number of nodes that have been made in trie but root, calculated on demand*/
+    /* returns number of nodes that have been made in trie except root, calculated on demand*/
     unsigned int CountNodes();
 
-    void Print(){
+    void Print() const{
+        bool empty_trie = true;
         for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
+            // if index i is empty
             if(root_->children[i] == nullptr){
                 continue;
             }
+            empty_trie = false;
             std::string word_{};
             int letter_ = i + int('a');
             word_ = word_ + char(letter_);
             Print(root_->children[i], word_);
+        }
+        if(empty_trie){
+            std::cout << "Trie is empty\n";
+            return;
         }
     };
 
@@ -95,17 +107,17 @@ class Trie
     bool Remove(std::string && word_, trienode_project::TrieNode * & node){
         /* There are five recursive conditions
          * node points to nullptr
-         * Node has children, is not end of word: call remove
-         * Node had children, is end of word: change isEndOfWord to false, return true
-         * Node doesn't have children, is not end of word: call remove, delete node
-         * Nodes doesn't have children, is end of word: delete node, return true
+         * Node has other children, is not end of word: call remove
+         * Node had other children, is end of word: change isEndOfWord to false, return true
+         * Node doesn't have other children, is not end of word: call remove, delete node
+         * Node doesn't have other children, is end of word: delete node, return true
          */
 
         /* Node points to null, no such word*/
         if(node == nullptr ){
             return false;
         }
-        // get current letter value
+        // get current letter index
         int letter_ = word_[0] - 'a';
         //check if node has children
         bool has_children = true;
@@ -117,7 +129,7 @@ class Trie
                 break;
             }
         };
-        //if node has children
+        //if node has other children
         if(has_children){
             if(!node->isEndOfWord){
                 return Remove(word_.substr(1), node->children[letter_]);
@@ -129,7 +141,7 @@ class Trie
                 return true;
             }
         }
-        //does not have children
+        //does not have other children
         else{
             if(!node->isEndOfWord){
                 return Remove(word_.substr(1), node->children[letter_]);
@@ -145,8 +157,29 @@ class Trie
             }
         }
     };
+
+    void Clear(trienode_project::TrieNode * node){
+        //How many recursive conditions?
+        //Node points to nullptr
+        //Node has children, is end of word
+        //Node has children, is not end of word
+        //Node doesn't have children, is end of word
+        if(node == nullptr){ return; }
+        for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
+            // node has children
+            if(node->children[i] != nullptr){
+                Clear(node->children[i]);
+            }
+            //node doesn't have children
+            else{
+                delete node;
+                node = nullptr;
+                return;
+            }
+        }
+    };
     
-    void Print(trienode_project::TrieNode * node, std::string & word_){
+    void Print(trienode_project::TrieNode * & node, std::string & word_) const {
     /* If reached end of word */
         if(node->isEndOfWord){
             std::cout << word_ << " ";

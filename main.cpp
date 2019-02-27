@@ -6,6 +6,8 @@ int main(int argc, char **argv){
     //if(argc != 2){std::cout << "Usage: " << argv[0] << " wordfile\n"; return 0;}
     trietree_project::Trie my_trie;
     
+    my_trie.Print();
+
     assert(my_trie.Insert("apple"));
     assert(my_trie.Insert("abe"));
     assert(my_trie.Insert("bat"));
@@ -23,7 +25,7 @@ int main(int argc, char **argv){
 
 
     my_trie.Print();
-    std::cout << my_trie.NumWords() << std::endl;
+    std::cout << my_trie.NumWords();
     my_trie.Remove("abe");
     my_trie.Remove("jump");
     my_trie.Remove("cat");
@@ -46,8 +48,12 @@ int main(int argc, char **argv){
     std::cout << std::endl;
     my_trie.Print(); 
     assert(!my_trie.Remove("castle"));
-    std::cout << my_trie.NumWords(); 
-    std::cout << "\nAll done!\n";
+    std::cout << my_trie.NumWords() << std::endl; 
+
+    my_trie.Clear();
+    my_trie.Print();
+
+    std::cout << "All done!\n"; 
 
     return 0;
 }
