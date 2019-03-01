@@ -79,7 +79,11 @@ class Trie
     inline unsigned int NumWords() const { return number_of_words; };
     
     /* returns number of nodes that have been made in trie except root, calculated on demand*/
-    unsigned int CountNodes();
+    unsigned int CountNodes(){
+        // if root is empty, all children point to null
+        //unsigned int node_count{0};
+        return CountNodes(root_) - 1;//, node_count);
+    };
 
     void Print() const{
         bool empty_trie = true;
@@ -177,6 +181,38 @@ class Trie
                 return;
             }
         }
+    };
+
+    unsigned int CountNodes(trienode_project::TrieNode * & node){//, unsigned int count){
+        // Think, how many subnodes does the node have?
+        // IF node = nullptr return 0
+        // IF node isEndOfWord and has no children: return 1
+        // IF node has children: CountNodes(children[a]) + CountNodes(children[b])+...
+        //Need to fix count when removing nodes
+        unsigned int count{1};
+
+        if(node == nullptr){
+            //return count; 
+            return 0;
+        }
+        bool has_children = false;
+        for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
+            if(node->children[i] != nullptr){
+                has_children = true;
+                break;
+            }
+        }
+        //Node isEndOfWord and has no children
+        if(has_children == false){
+            return 1;
+        }
+        //Node has children
+        for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
+            if(node->children[i] != nullptr){
+                count = count + CountNodes(node->children[i]);//, count); 
+            }
+        }
+        return count;
     };
     
     void Print(trienode_project::TrieNode * & node, std::string & word_) const {

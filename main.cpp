@@ -25,10 +25,13 @@ int main(int argc, char **argv){
 
 
     my_trie.Print();
-    std::cout << my_trie.NumWords();
+    std::cout << "Number of words: " << my_trie.NumWords() << std::endl;
+    std::cout << "Number of nodes: " << my_trie.CountNodes() << std::endl;
     my_trie.Remove("abe");
     my_trie.Remove("jump");
     my_trie.Remove("cat");
+    my_trie.Remove("dad");
+    my_trie.Remove("moon");
 
     assert(my_trie.Contains("apple"));
     assert(!my_trie.Contains("abe"));
@@ -37,18 +40,18 @@ int main(int argc, char **argv){
     assert(my_trie.Contains("bag"));
     assert(my_trie.Contains("brother"));
     assert(!my_trie.Contains("cat"));
-    assert(my_trie.Contains("dad"));
+    assert(!my_trie.Contains("dad"));
     assert(my_trie.Contains("fun"));
     assert(!my_trie.Contains("jump"));
     assert(my_trie.Contains("aardvark"));
     assert(my_trie.Contains("custard"));
     assert(my_trie.Contains("sun"));
-    assert(my_trie.Contains("moon"));
+    assert(!my_trie.Contains("moon"));
     
-    std::cout << std::endl;
     my_trie.Print(); 
     assert(!my_trie.Remove("castle"));
-    std::cout << my_trie.NumWords() << std::endl; 
+    std::cout << "Number of words: " << my_trie.NumWords() << std::endl;
+    std::cout << "Number of nodes: " << my_trie.CountNodes() << std::endl;
 
     my_trie.Clear();
     my_trie.Print();
