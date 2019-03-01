@@ -1,7 +1,9 @@
 #ifndef TRIE_H
 #define TRIE_H
 
+#include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <utility>
 
@@ -15,14 +17,28 @@ class Trie
     Trie(): root_{new trienode_project::TrieNode()}, number_of_words{0} {};
     
     /* one paramter constructor using filestream to textfile */
+    Trie(std::ifstream & filestream): root_{ new trienode_project::TrieNode()}, number_of_words{0}{
+        //if not empty, clear()
+        Load(filestream);
+    };
 
     /* Destructor */
-    ~Trie(){};
+    ~Trie(){
+        Clear();
+    };
 
     /* creates Trie using given dictionary file 
      * if trie is already loaded, clear and reload
      */ 
-    void Load();
+    void Load(std::ifstream & filestream){
+        std::string word;
+        while(!filestream.eof()){
+            filestream >> word;
+            std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+            Insert(word);
+        }
+        filestream.close();
+    };
 
     bool Insert(const std::string & word_){
         trienode_project::TrieNode * temp_ = root_;
