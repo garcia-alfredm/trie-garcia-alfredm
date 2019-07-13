@@ -98,7 +98,7 @@ class Trie
     unsigned int CountNodes(){
         // if root is empty, all children point to null
         //unsigned int node_count{0};
-        return CountNodes(root_) - 1;//, node_count);
+        return CountNodes(root_);//, node_count);
     };
 
     void Print() const{
@@ -209,7 +209,7 @@ class Trie
 
         if(node == nullptr){
             //return count; 
-            return 0;
+            return -1;
         }
         bool has_children = false;
         for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){

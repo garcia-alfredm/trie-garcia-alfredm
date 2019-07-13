@@ -18,7 +18,7 @@ class TrieNode
         }
     };
     //copy constructor
-    //TrieNode(const T& data, Node next): data(data), next(next) {};
+    //TrieNode(const T& data_, Node next_): data(data_), next(next_) {};
 
 
     //TrieNode * parent;

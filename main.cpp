@@ -62,8 +62,8 @@ int main(int argc, char **argv){
         std::cout << "Number of words: " << my_trie.NumWords() << std::endl;
         std::cout << "Number of nodes: " << my_trie.CountNodes() << std::endl;
 
-        my_trie.Clear();
-        //my_trie.Print();
+        //my_trie.Clear();
+        my_trie.Print();
 
         std::cout << "All done!\n"; 
     }
