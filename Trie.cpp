@@ -17,6 +17,7 @@ Trie::~Trie(){
   }
 
 void Trie::Load(std::ifstream & filestream){
+    Clear();
     std::string word;
     while(!filestream.eof()){
         filestream >> word;

@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "Trie.h"
+#include "Dictionary.h"
 
 int main(int argc, char **argv){
     if(argc != 2){
@@ -11,8 +11,20 @@ int main(int argc, char **argv){
         std::ifstream filestream;
         filestream.open(argv[1]);
 
-        trietree_project::Trie my_trie{filestream};
+        //trietree_project::Trie my_trie{filestream};
         //my_trie.Load(filestream);
+
+        //dictionary_project::Dictionary user_dictionary{filestream};
+        dictionary_project::Dictionary user_dictionary;
+        user_dictionary.Load(filestream);
+
+        assert(user_dictionary.isLegalWord("apple"));
+        assert(user_dictionary.isLegalWord("bat"));
+        assert(user_dictionary.isLegalWord("cave"));
+        assert(user_dictionary.isLegalWord("jump"));
+        assert(user_dictionary.isLegalWord("dad"));
+
+        std::cout << "Word count is: " << user_dictionary.Word_Count() << std::endl;
     
         /*
         assert(my_trie.Insert("apple"));
@@ -41,7 +53,7 @@ int main(int argc, char **argv){
         my_trie.Remove("dad");
         my_trie.Remove("moon");
         */
-        
+        /*
         assert(my_trie.Contains("apple"));
         assert(my_trie.Contains("abe"));
         assert(my_trie.Contains("bat"));
@@ -56,15 +68,16 @@ int main(int argc, char **argv){
         assert(my_trie.Contains("custard"));
         assert(my_trie.Contains("sun"));
         assert(my_trie.Contains("moon"));
+        */
         
         //my_trie.Print(); 
         //assert(!my_trie.Remove("castle"));
         //my_trie.Clear();
 
-        std::cout << "Number of words: " << my_trie.NumWords() << std::endl;
-        std::cout << "Number of nodes: " << my_trie.CountNodes() << std::endl;
+        //std::cout << "Number of words: " << my_trie.NumWords() << std::endl;
+        //std::cout << "Number of nodes: " << my_trie.CountNodes() << std::endl;
 
-        my_trie.Print();
+        //my_trie.Print();
 
         std::cout << "All done!\n"; 
     }
