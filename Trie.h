@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "TrieNode.h"
 
@@ -44,6 +45,8 @@ class Trie{
     unsigned int CountNodes();
 
     void Print() const;
+    
+    void getSuggested(std::string & word_, std::vector<std::string> & my_vector);
 
   private:
     trienode_project::TrieNode * root_;
@@ -56,6 +59,9 @@ class Trie{
     unsigned int CountNodes(trienode_project::TrieNode * & node);
     
     void Print(trienode_project::TrieNode * & node, std::string & word_) const;
+    
+    void getSuggested(std::string word_, std::vector<std::string> & my_vector, trienode_project::TrieNode * & node);
+
 };
 
 }

@@ -25,7 +25,14 @@ int main(int argc, char **argv){
         assert(user_dictionary.isLegalWord("dad"));
 
         std::cout << "Word count is: " << user_dictionary.Word_Count() << std::endl;
-    
+   
+        std::string stuff = "philo";
+        int num {7};
+        std::vector<std::string> words = user_dictionary.Suggest(stuff, num);
+        for(auto & x : words){
+            std::cout << x << " ";
+        }
+        std::cout << std::endl;
         /*
         assert(my_trie.Insert("apple"));
         assert(my_trie.Insert("abe"));

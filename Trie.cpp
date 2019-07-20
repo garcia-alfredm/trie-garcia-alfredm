@@ -222,4 +222,38 @@ void Trie::Print(trienode_project::TrieNode * & node, std::string & word_)const 
         }   
     }
   }
+
+void Trie::getSuggested(std::string & word_, std::vector<std::string> & my_vector){
+    std::string answer{};
+    int letter{0};
+    trienode_project::TrieNode * temp = root_;
+
+    for(size_t i{0}; i < word_.length(); ++i){
+        answer += word_[i];
+        letter = word_[i] - 'a';
+        temp = temp->children[letter];
+    }
+    getSuggested(answer, my_vector, temp);
+    return;
+  }
+
+void Trie::getSuggested(std::string word_, std::vector<std::string> & my_vector, trienode_project::TrieNode * & node){
+    //if node returns EndOfWord, push to vector
+    if(node->isEndOfWord){
+        my_vector.push_back(word_);
+    }
+    else if(my_vector.size() >= my_vector.capacity()){
+        return;
+    }
+    for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
+        std::string copy_{word_};
+        //children[i] isn't empty
+        if(node->children[i] != nullptr){
+            copy_ += char(i + int('a'));
+            getSuggested(copy_, my_vector, node->children[i]);
+        }
+    }
+    //current node is a word and has no children
+    return;
+  }
 }

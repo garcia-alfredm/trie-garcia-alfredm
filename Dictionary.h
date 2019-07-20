@@ -1,8 +1,6 @@
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
 
-#include <vector>
-
 #include "Trie.h"
 
 namespace dictionary_project{
@@ -21,7 +19,6 @@ class Dictionary{
 
   private:
     trietree_project::Trie my_trie;
-    
 };
 }
 
