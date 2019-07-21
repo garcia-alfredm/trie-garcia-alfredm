@@ -6,7 +6,6 @@
 namespace trienode_project{
 
 const int ALPHABET_SIZE = 26;
-//const int MAX_WORD_SIZE = 20;
 
 class TrieNode 
 {
@@ -17,9 +16,6 @@ class TrieNode
           children[i] = nullptr;
         }
     };
-    //copy constructor
-    //TrieNode(const T& data_, Node next_): data(data_), next(next_) {};
-
 
     //TrieNode * parent;
     TrieNode * children[ALPHABET_SIZE];

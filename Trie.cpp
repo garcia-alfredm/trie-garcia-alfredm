@@ -30,7 +30,7 @@ void Trie::Load(std::ifstream & filestream){
 bool Trie::Insert(const std::string & word_){
     trienode_project::TrieNode * temp_ = root_;
     for(size_t i = 0; i < word_.length(); ++i){
-        /* Returns the appropriate letter for the children */
+        /* Returns the appropriate letter for the child node */
         int letter_ = word_[i] - 'a';
 
         /* Make new node if path doesn't exist */
@@ -177,11 +177,9 @@ unsigned int Trie::CountNodes(trienode_project::TrieNode * & node){
     // IF node = nullptr return 0
     // IF node isEndOfWord and has no children: return 1
     // IF node has children: CountNodes(children[a]) + CountNodes(children[b])+...
-    //Need to fix count when removing nodes
     unsigned int count{1};
 
     if(node == nullptr){
-        //return count; 
         return -1;
     }
     bool has_children = false;

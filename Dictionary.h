@@ -22,6 +22,8 @@ class Dictionary{
   private:
     trietree_project::Trie my_trie;
 
+    /* Create a comparator with a functor to handle comparing strings by length
+     */
     struct Comparator{
         bool operator()(const std::string & first, const std::string & second){
             return first.size() < second.size();

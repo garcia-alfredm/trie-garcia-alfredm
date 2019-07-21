@@ -20,12 +20,14 @@ bool Dictionary::isLegalWord(const std::string& word_) const{
   }
 
 std::vector<std::string> Dictionary::Suggest(std::string & word_, int & size_){
-    std::vector<std::string> my_vector;//(size_);
+    std::vector<std::string> my_vector;
     Comparator comparator;
 
     my_trie.getSuggested(word_, my_vector);
 
-    std::sort(my_vector.begin(), my_vector.end());
+    /* trie structure means vector is in alphabetical order
+     * use stable sort with fuctor to sort by length
+     */
     std::stable_sort(my_vector.begin(), my_vector.end(), comparator);
     my_vector.resize(size_);
 
