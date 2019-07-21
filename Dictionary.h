@@ -3,6 +3,8 @@
 
 #include "Trie.h"
 
+#include <algorithm>
+
 namespace dictionary_project{
 class Dictionary{
   public:
@@ -19,6 +21,12 @@ class Dictionary{
 
   private:
     trietree_project::Trie my_trie;
+
+    struct Comparator{
+        bool operator()(const std::string & first, const std::string & second){
+            return first.size() < second.size();
+        }
+    };
 };
 }
 

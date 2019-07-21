@@ -20,10 +20,15 @@ bool Dictionary::isLegalWord(const std::string& word_) const{
   }
 
 std::vector<std::string> Dictionary::Suggest(std::string & word_, int & size_){
-     //throw error code; or rather have AutoComplete class handle
-    // return;    
-    std::vector<std::string> my_vector(size_);
+    std::vector<std::string> my_vector;//(size_);
+    Comparator comparator;
+
     my_trie.getSuggested(word_, my_vector);
+
+    std::sort(my_vector.begin(), my_vector.end());
+    std::stable_sort(my_vector.begin(), my_vector.end(), comparator);
+    my_vector.resize(size_);
+
     return my_vector;
   }
 }

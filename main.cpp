@@ -29,8 +29,11 @@ int main(int argc, char **argv){
         std::string stuff = "philo";
         int num {7};
         std::vector<std::string> words = user_dictionary.Suggest(stuff, num);
-        for(auto & x : words){
-            std::cout << x << " ";
+        //for(auto & x : words){
+          //  std::cout << x << " ";
+        //}
+        for(size_t i = 0; i < words.size(); ++i){
+            std::cout << words[i] << " ";
         }
         std::cout << std::endl;
         /*
