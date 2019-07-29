@@ -7,8 +7,7 @@ namespace trienode_project{
 
 const int ALPHABET_SIZE = 26;
 
-class TrieNode 
-{
+class TrieNode{
   public:
     /* Default constructor*/
     TrieNode(TrieNode * node_parent = nullptr): isEndOfWord{false}{
@@ -17,10 +16,8 @@ class TrieNode
         }
     };
 
-    //TrieNode * parent;
     TrieNode * children[ALPHABET_SIZE];
     bool isEndOfWord;
-    //std::vector<int> occurences;
 };
 
 }

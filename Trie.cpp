@@ -4,18 +4,26 @@
 
 namespace trietree_project{
 
+/* Default Construction using initialization list */
 Trie::Trie(): root_{ new trienode_project::TrieNode()}, number_of_words{0} 
 { }
-
+/* One parameter constructor with initizliation list
+ * @filestream: ifstream object linked to word list
+ * Postcondition: any existing trie is cleared. Populated with new words
+ */ 
 Trie::Trie(std::ifstream & filestream): root_{new trienode_project::TrieNode()}, number_of_words{0}{
     Clear();
     Load(filestream);
   }
-
+/* Destructor calls Clear() */
 Trie::~Trie(){
     Clear();
   }
 
+/* Creates trie using given word file
+ * @filesteam: ifstream object linked to word list
+ * Postcondition: existing trie is cleared. Populated with new words
+ */
 void Trie::Load(std::ifstream & filestream){
     Clear();
     std::string word;
@@ -27,6 +35,11 @@ void Trie::Load(std::ifstream & filestream){
     filestream.close();
   }
 
+/* Word is inserted to trie with an iterative approach 
+ * @word_: const string to be inserted to trie
+ * Precondition: Trie has been initialized 
+ * Postcondition: word has been inserted to trie, size incremented
+ */
 bool Trie::Insert(const std::string & word_){
     trienode_project::TrieNode * temp_ = root_;
     for(size_t i = 0; i < word_.length(); ++i){
@@ -50,6 +63,10 @@ bool Trie::Insert(const std::string & word_){
     return true;
   }
 
+/* Checks if word already exists in trie
+ * @word_: string value to be check
+ * Precondition: trie has been initialized;
+ */
 bool Trie::Contains(const std::string & word_) const{
    trienode_project::TrieNode * temp_ = root_;
    for(size_t i = 0; i < word_.length(); ++i){
