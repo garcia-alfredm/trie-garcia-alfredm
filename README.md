@@ -1,1 +1,1 @@
-# Project3-Trie
+Autocomplete application with Trie data structure
