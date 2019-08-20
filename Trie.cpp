@@ -7,6 +7,7 @@ namespace trietree_project{
 /* Default Construction using initialization list */
 Trie::Trie(): root_{ new trienode_project::TrieNode()}, number_of_words{0} 
 { }
+
 /* One parameter constructor with initizliation list
  * @filestream: ifstream object linked to word list
  * Postcondition: any existing trie is cleared. Populated with new words
@@ -15,6 +16,7 @@ Trie::Trie(std::ifstream & filestream): root_{new trienode_project::TrieNode()},
     Clear();
     Load(filestream);
   }
+
 /* Destructor calls Clear() */
 Trie::~Trie(){
     Clear();
@@ -80,10 +82,12 @@ bool Trie::Contains(const std::string & word_) const{
     return(temp_->isEndOfWord);
   }
 
+/* Removes l-value reference string */
 bool Trie::Remove(std::string && word_){
     return Remove(std::move(word_), root_);
   }
 
+/* Clears trie of dynamically allocated space */
 void Trie::Clear(){
     Clear(root_);
     number_of_words = 0;
@@ -91,14 +95,16 @@ void Trie::Clear(){
     return;
   }
 
+/* Calculates number of nodes in trie on demand */
 unsigned int Trie::CountNodes(){
     return CountNodes(root_);
   }
 
+/* Print all contents of trie node in alphabetical order */
 void Trie::Print() const{
     bool empty_trie = true;
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-        // if index i is empty
+        // if index i is empty, continue to next iteration
         if(root_->children[i] == nullptr){
             continue;
         }
@@ -114,6 +120,11 @@ void Trie::Print() const{
     }
   }
 
+/* Removes target word recursively
+ * @word_: l-value string to be removed
+ * @node: current trie node, recursive target
+ * Postcondition: word_ is not longer valid target within trie
+ */
 bool Trie::Remove(std::string && word_, trienode_project::TrieNode * & node){
     /* There are five recursive conditions
      * node points to nullptr
@@ -168,13 +179,15 @@ bool Trie::Remove(std::string && word_, trienode_project::TrieNode * & node){
     }
   }
 
+/* Clears the trie of allocated data
+ * @node: TrieNode used for crawling recursivly thru trie
+ * Precondition: Trie is populated with data
+ * Postcondition: Trie is depopulated and dynamically allocated data is removed
+ */
 void Trie::Clear(trienode_project::TrieNode * & node){
-    //How many recursive conditions?
-    //Node points to nullptr
-    //Node has children, is end of word
-    //Node has children, is not end of word
-    //Node doesn't have children, is end of word
+    /* Recursive condition */
     if(node == nullptr){ return; }
+    /* Loop thru array of TrieNodes */
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
         // node has children
         if(node->children[i] != nullptr){
@@ -189,8 +202,10 @@ void Trie::Clear(trienode_project::TrieNode * & node){
     }
   }
 
+/* Counts nodes on demand
+ * @node: TrieNode that crawls thru trie
+ */
 unsigned int Trie::CountNodes(trienode_project::TrieNode * & node){
-    // Think, how many subnodes does the node have?
     // IF node = nullptr return 0
     // IF node isEndOfWord and has no children: return 1
     // IF node has children: CountNodes(children[a]) + CountNodes(children[b])+...
@@ -219,6 +234,7 @@ unsigned int Trie::CountNodes(trienode_project::TrieNode * & node){
     return count;
   }
 
+/* Prints all contents of Trie in alphabetical order */
 void Trie::Print(trienode_project::TrieNode * & node, std::string & word_)const {
     /* If reached end of word */
     if(node->isEndOfWord){
@@ -238,6 +254,11 @@ void Trie::Print(trienode_project::TrieNode * & node, std::string & word_)const 
     }
   }
 
+/* Returns a vector of suggested words
+ * @word_: string value used to determine suggested words
+ * @my_vector: string vector that holds suggested words
+ * Precondition: Trie will be populated with values
+ */
 void Trie::getSuggested(std::string & word_, std::vector<std::string> & my_vector){
     //std::string answer{};
     int letter{0};
@@ -252,14 +273,16 @@ void Trie::getSuggested(std::string & word_, std::vector<std::string> & my_vecto
     return;
   }
 
+/* Returns a vector of suggested words
+ * @word_: string value used to determine suggested words
+ * @my_vector: string vector that holds suggested words
+ * Precondition: Trie will be populated with values
+ */
 void Trie::getSuggested(std::string word_, std::vector<std::string> & my_vector, trienode_project::TrieNode * & node){
     //if node returns EndOfWord, push to vector
     if(node->isEndOfWord){
         my_vector.push_back(word_);
     }
-    //else if(my_vector.size() >= my_vector.capacity()){
-      //  return;
-    //}
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
         std::string copy_{word_};
         //children[i] isn't empty
