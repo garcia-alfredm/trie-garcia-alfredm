@@ -120,64 +120,31 @@ void Trie::Print() const{
     }
   }
 
-/* Removes target word recursively
+/* Removes target word recursively; 
  * @word_: l-value string to be removed
  * @node: current trie node, recursive target
  * Postcondition: word_ is not longer valid target within trie
+ * node->isEndOfWord is set to false, no change in trie size
  */
 bool Trie::Remove(std::string && word_, trienode_project::TrieNode * & node){
-    /* There are five recursive conditions
-     * node points to nullptr
-     * Node has other children, is not end of word: call remove
-     * Node had other children, is end of word: change isEndOfWord to false, return true
-     * Node doesn't have other children, is not end of word: call remove, delete node
-     * Node doesn't have other children, is end of word: delete node, return true
-     */
-
     /* Node points to null, no such word*/
     if(node == nullptr ){
         return false;
     }
     // get current letter index
     int letter_ = word_[0] - 'a';
-    //check if node has children
-    bool has_children = true;
-    for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-        //avoid testing current index
-        if(int(i) == letter_){ continue; }
-        else if(node->children[i] != nullptr){
-            has_children = false;
-            break;
-        }
-    };
-    //if node has other children
-    if(has_children){
-        if(!node->isEndOfWord){
-            return Remove(word_.substr(1), node->children[letter_]);
-        }
-        //is end of word
-        else{
-            node->isEndOfWord = false;
-            --number_of_words;
-            return true;
-        }
+    
+    /* if node isn't EndOfWord*/
+    /* and if is not at end of word */
+    if(!node->isEndOfWord && word_.length() >= 1){
+        return Remove(word_.substr(1), node->children[letter_]);
     }
-    //does not have other children
+    /* iterated to end of word and isEndOfWord */
     else{
-        if(!node->isEndOfWord){
-            return Remove(word_.substr(1), node->children[letter_]);
-            delete node;
-            node = nullptr;
-        }
-        //is end of word
-        else{
-           delete node;
-           node = nullptr;
-           --number_of_words;
-           return true; 
-        }
+        node->isEndOfWord = false;
+        return true;
     }
-  }
+}
 
 /* Clears the trie of allocated data
  * @node: TrieNode used for crawling recursivly thru trie
