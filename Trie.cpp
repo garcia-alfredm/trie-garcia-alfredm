@@ -147,7 +147,7 @@ bool Trie::Remove(std::string && word_, trienode_project::TrieNode * & node){
 }
 
 /* Clears the trie of allocated data
- * @node: TrieNode used for crawling recursivly thru trie
+ * @node: TrieNode used for crawling recursivly thru trie; post-order traversal
  * Precondition: Trie is populated with data
  * Postcondition: Trie is depopulated and dynamically allocated data is removed
  */
