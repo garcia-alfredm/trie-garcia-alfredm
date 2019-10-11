@@ -13,7 +13,6 @@ Trie::Trie(): root_{ new trienode_project::TrieNode()}, number_of_words{0}
  * Postcondition: any existing trie is cleared. Populated with new words
  */ 
 Trie::Trie(std::ifstream & filestream): root_{new trienode_project::TrieNode()}, number_of_words{0}{
-    Clear();
     Load(filestream);
   }
 
@@ -120,7 +119,7 @@ void Trie::Print() const{
     }
   }
 
-/* Removes target word recursively; 
+/* Removes target word 
  * @word_: l-value string to be removed
  * @node: current trie node, recursive target
  * Postcondition: word_ is not longer valid target within trie
@@ -136,12 +135,14 @@ bool Trie::Remove(std::string && word_, trienode_project::TrieNode * & node){
     
     /* if node isn't EndOfWord*/
     /* and if is not at end of word */
+    /* handles the case if target word has already been deleted but exists in trie */
     if(!node->isEndOfWord && word_.length() >= 1){
         return Remove(word_.substr(1), node->children[letter_]);
     }
     /* iterated to end of word and isEndOfWord */
     else{
         node->isEndOfWord = false;
+        --number_of_words;
         return true;
     }
 }
@@ -156,49 +157,33 @@ void Trie::Clear(trienode_project::TrieNode * & node){
     if(node == nullptr){ return; }
     /* Loop thru array of TrieNodes */
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-        // node has children
+        // if node has children, clear their values
         if(node->children[i] != nullptr){
             Clear(node->children[i]);
         }
-        //node doesn't have children
-        else{
-            delete node;
-            node = nullptr;
-            return;
-        }
     }
-  }
+    /* finished iterating thru children */
+    delete node;
+    node = nullptr;
+    return; 
+}
 
-/* Counts nodes on demand
+/* Counts nodes on demand, post-order recursion
  * @node: TrieNode that crawls thru trie
  */
 unsigned int Trie::CountNodes(trienode_project::TrieNode * & node){
-    // IF node = nullptr return 0
-    // IF node isEndOfWord and has no children: return 1
-    // IF node has children: CountNodes(children[a]) + CountNodes(children[b])+...
-    unsigned int count{1};
+    unsigned int count{0};
 
+    /* Avoid counting an empty node */
     if(node == nullptr){
         return -1;
     }
-    bool has_children = false;
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
         if(node->children[i] != nullptr){
-            has_children = true;
-            break;
+            count += CountNodes(node->children[i]); 
         }
     }
-    //Node isEndOfWord and has no children
-    if(has_children == false){
-        return 1;
-    }
-    //Node has children
-    for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-        if(node->children[i] != nullptr){
-            count = count + CountNodes(node->children[i]);//, count); 
-        }
-    }
-    return count;
+    return count + 1;
   }
 
 /* Prints all contents of Trie in alphabetical order */
