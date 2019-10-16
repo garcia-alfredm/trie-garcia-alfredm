@@ -30,7 +30,7 @@ void Trie::Load(std::ifstream & filestream){
     std::string word;
     while(!filestream.eof()){
         filestream >> word;
-        std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+        //std::transform(word.begin(), word.end(), word.begin(), ::tolower);
         Insert(word);
     }
     filestream.close();
@@ -45,7 +45,7 @@ bool Trie::Insert(const std::string & word_){
     trienode_project::TrieNode * temp_ = root_;
     for(size_t i = 0; i < word_.length(); ++i){
         /* Returns the appropriate letter for the child node */
-        int letter_ = word_[i] - 'a';
+        int letter_ = getIndex(word_[i]);
 
         /* Make new node if path doesn't exist */
         if(temp_->children[letter_] == nullptr){
@@ -71,7 +71,7 @@ bool Trie::Insert(const std::string & word_){
 bool Trie::Contains(const std::string & word_) const{
    trienode_project::TrieNode * temp_ = root_;
    for(size_t i = 0; i < word_.length(); ++i){
-        int letter_ = word_[i] - 'a';
+        int letter_ = getIndex(word_[i]);
         /* Word doesn't exist in trie tree*/
         if(temp_->children[letter_] == nullptr){
             return false;
@@ -103,14 +103,16 @@ unsigned int Trie::CountNodes(){
 void Trie::Print() const{
     bool empty_trie = true;
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-        // if index i is empty, continue to next iteration
+        // if index i is empty, continue to next index
         if(root_->children[i] == nullptr){
             continue;
         }
         empty_trie = false;
         std::string word_{};
-        int letter_ = i + int('a');
-        word_ = word_ + char(letter_);
+        char letter_;
+        letter_ = getCharacter(i);
+        //int letter_ = i + int('a');
+        word_ += letter_;
         Print(root_->children[i], word_);
     }
     if(empty_trie){
@@ -118,6 +120,28 @@ void Trie::Print() const{
         return;
     }
   }
+
+int Trie::getIndex(char & character_){
+    int letter_{0};
+    /* ASCII alphabet values for A-Z are 65-90 respec.*/
+    letter_ = character_ - 'A';
+    /* handle lower-case characters*/
+    if(letter_ >= 32){
+        letter_ -= 6;
+    }
+    return letter_;
+}
+
+char getCharacter(int & value_){
+    int letter_{0};
+    /* Index value turns to appropriate ASCII value */
+    letter_ = value_ + 65;
+    /* handle lowercase letters */
+    if( letter_ > 90){
+        letter_ += 6;
+    }
+    return char(letter_);
+}
 
 /* Removes target word 
  * @word_: l-value string to be removed
@@ -131,7 +155,7 @@ bool Trie::Remove(std::string && word_, trienode_project::TrieNode * & node){
         return false;
     }
     // get current letter index
-    int letter_ = word_[0] - 'a';
+    int letter_ = getIndex(word_[0]);
     
     /* if node isn't EndOfWord*/
     /* and if is not at end of word */
@@ -196,8 +220,9 @@ void Trie::Print(trienode_project::TrieNode * & node, std::string & word_)const 
     for(int i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
         /* If child index isn't nullptr, it has a value */
         if(node->children[i] != nullptr){
-            int letter_ = i + int('a');
-            std::string full_word = word_ + char(letter_);
+            char letter_;
+            letter_ = getCharacter(i);
+            std::string full_word = word_ + letter_;
             Print(node->children[i], full_word);
         }
         else{
@@ -212,13 +237,11 @@ void Trie::Print(trienode_project::TrieNode * & node, std::string & word_)const 
  * Precondition: Trie will be populated with values
  */
 void Trie::getSuggested(std::string & word_, std::vector<std::string> & my_vector){
-    //std::string answer{};
     int letter{0};
     trienode_project::TrieNode * temp = root_;
 
     for(size_t i{0}; i < word_.length(); ++i){
-        //answer += word_[i];
-        letter = word_[i] - 'a';
+        letter = getIndex( word_[i]);
         temp = temp->children[letter];
     }
     getSuggested(word_, my_vector, temp);
@@ -239,7 +262,8 @@ void Trie::getSuggested(std::string word_, std::vector<std::string> & my_vector,
         std::string copy_{word_};
         //children[i] isn't empty
         if(node->children[i] != nullptr){
-            copy_ += char(i + int('a'));
+            char value_ = getCharacter(i);
+            copy_.push_back(value);
             getSuggested(copy_, my_vector, node->children[i]);
         }
     }
