@@ -121,7 +121,7 @@ void Trie::Print() const{
     }
   }
 
-int Trie::getIndex(char & character_){
+int Trie::getIndex(const char & character_) const {
     int letter_{0};
     /* ASCII alphabet values for A-Z are 65-90 respec.*/
     letter_ = character_ - 'A';
@@ -132,7 +132,14 @@ int Trie::getIndex(char & character_){
     return letter_;
 }
 
-char getCharacter(int & value_){
+char Trie::getCharacter(const int & value_) const{
+    /*
+    if(value_ + 65 > 90){
+        static int letter_ = value_ + 71;
+    }
+    else{
+        static int letter_ = value_ + 65;
+    }*/
     int letter_{0};
     /* Index value turns to appropriate ASCII value */
     letter_ = value_ + 65;
@@ -140,7 +147,8 @@ char getCharacter(int & value_){
     if( letter_ > 90){
         letter_ += 6;
     }
-    return char(letter_);
+    char handle = letter_;
+    return handle;
 }
 
 /* Removes target word 
@@ -260,10 +268,11 @@ void Trie::getSuggested(std::string word_, std::vector<std::string> & my_vector,
     }
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
         std::string copy_{word_};
+        char value_;
         //children[i] isn't empty
         if(node->children[i] != nullptr){
-            char value_ = getCharacter(i);
-            copy_.push_back(value);
+            value_ = getCharacter(i);
+            copy_.push_back(value_);
             getSuggested(copy_, my_vector, node->children[i]);
         }
     }

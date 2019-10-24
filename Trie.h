@@ -70,9 +70,9 @@ class Trie{
     trienode_project::TrieNode * root_;
     unsigned int number_of_words;
     
-    int getIndex(char & character_);
+    int getIndex(const char & character_) const;
 
-    char getCharacter(int & value_);
+    char getCharacter(const int & value_) const;
     
     /* Removes target word recursively
      * @word_: l-value string to be removed
