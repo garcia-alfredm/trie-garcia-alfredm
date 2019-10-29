@@ -250,6 +250,10 @@ void Trie::getSuggested(std::string & word_, std::vector<std::string> & my_vecto
 
     for(size_t i{0}; i < word_.length(); ++i){
         letter = getIndex( word_[i]);
+        if(temp->children[letter] == nullptr){
+            std::cout << "Not a valid word.\n";
+            return;
+        }
         temp = temp->children[letter];
     }
     getSuggested(word_, my_vector, temp);
