@@ -54,7 +54,7 @@ bool Trie::Insert(const std::string & word_){
         temp_ = temp_->children[letter_];
 
         /* if isEndOfWord is true and reached last letter, word exists */
-        if(i == word_.length() && temp_->isEndOfWord == true){
+        if(i == word_.length()-1 && temp_->isEndOfWord == true){
             return false;
         }
     }
