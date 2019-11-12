@@ -5,7 +5,7 @@
 
 namespace trienode_project{
 
-const int ALPHABET_SIZE = 26;
+const int ALPHABET_SIZE = 52;
 
 class TrieNode{
   public:

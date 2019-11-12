@@ -5,21 +5,31 @@
 #
 #############################
 
-CC = g++
-LFLAGS = -std=c++11
-CFLAGS = -c -Wall
+CC := g++
+LFLAGS := -std=c++14
+CFLAGS := -c -Wall
+OBJECTS01 := main.o
+OBJECTS02 := test.o
+OBJECTS03 := Trie.o Dictionary.o
 
-SOURCES = $(wildcard *.cpp)
-OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE_NAME = AutoComplete
+.PHONY: all
+all: AutoComplete Test
 
-all: $(EXECUTABLE_NAME)
+AutoComplete: main.o Trie.o Dictionary.o
+	#g++ -g -o AutoComplete main.o Trie.o Dictionary.o
+	$(CC) $(LFLAGS) -g -o AutoComplete $(OBJECTS01) $(OBJECTS03)
 
-$(EXECUTABLE_NAME): $(OBJECTS)
-	$(CC) -o $(EXECUTABLE_NAME) $(OBJECTS)
+Test: test.o Trie.o Dictionary.o
+	#g++ -g -o Test test.o Trie.o Dictionary.o
+	$(CC) $(LFLAGS) -g -o Test $(OBJECTS02) $(OBJECTS03)
 
-.cpp.o:
-	$(CC) $(CFLAGS) $(LFLAGS) $< -o $@
+main.o: Dictionary.h
 
+Trie.o: Trie.h
+
+Dictionary.o: Dictionary.h
+
+.PHONY: clean
 clean:
-	$(RM) *.o *~ $(EXECUTABLE_NAME)
+	\rm AutoComplete Test $(OBJECTS01) $(OBJECTS02) $(OBJECTS03)
+

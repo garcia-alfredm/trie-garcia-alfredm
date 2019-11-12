@@ -13,7 +13,6 @@ Trie::Trie(): root_{ new trienode_project::TrieNode()}, number_of_words{0}
  * Postcondition: any existing trie is cleared. Populated with new words
  */ 
 Trie::Trie(std::ifstream & filestream): root_{new trienode_project::TrieNode()}, number_of_words{0}{
-    Clear();
     Load(filestream);
   }
 
@@ -31,7 +30,7 @@ void Trie::Load(std::ifstream & filestream){
     std::string word;
     while(!filestream.eof()){
         filestream >> word;
-        std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+        //std::transform(word.begin(), word.end(), word.begin(), ::tolower);
         Insert(word);
     }
     filestream.close();
@@ -46,7 +45,7 @@ bool Trie::Insert(const std::string & word_){
     trienode_project::TrieNode * temp_ = root_;
     for(size_t i = 0; i < word_.length(); ++i){
         /* Returns the appropriate letter for the child node */
-        int letter_ = word_[i] - 'a';
+        int letter_ = getIndex(word_[i]);
 
         /* Make new node if path doesn't exist */
         if(temp_->children[letter_] == nullptr){
@@ -55,7 +54,7 @@ bool Trie::Insert(const std::string & word_){
         temp_ = temp_->children[letter_];
 
         /* if isEndOfWord is true and reached last letter, word exists */
-        if(i == word_.length() && temp_->isEndOfWord == true){
+        if(i == word_.length()-1 && temp_->isEndOfWord == true){
             return false;
         }
     }
@@ -72,7 +71,7 @@ bool Trie::Insert(const std::string & word_){
 bool Trie::Contains(const std::string & word_) const{
    trienode_project::TrieNode * temp_ = root_;
    for(size_t i = 0; i < word_.length(); ++i){
-        int letter_ = word_[i] - 'a';
+        int letter_ = getIndex(word_[i]);
         /* Word doesn't exist in trie tree*/
         if(temp_->children[letter_] == nullptr){
             return false;
@@ -104,14 +103,16 @@ unsigned int Trie::CountNodes(){
 void Trie::Print() const{
     bool empty_trie = true;
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-        // if index i is empty, continue to next iteration
+        // if index i is empty, continue to next index
         if(root_->children[i] == nullptr){
             continue;
         }
         empty_trie = false;
         std::string word_{};
-        int letter_ = i + int('a');
-        word_ = word_ + char(letter_);
+        char letter_;
+        letter_ = getCharacter(i);
+        //int letter_ = i + int('a');
+        word_ += letter_;
         Print(root_->children[i], word_);
     }
     if(empty_trie){
@@ -120,67 +121,66 @@ void Trie::Print() const{
     }
   }
 
-/* Removes target word recursively
+int Trie::getIndex(const char & character_) const {
+    int letter_{0};
+    /* ASCII alphabet values for A-Z are 65-90 respec.*/
+    letter_ = character_ - 'A';
+    /* handle lower-case characters*/
+    if(letter_ >= 32){
+        letter_ -= 6;
+    }
+    return letter_;
+}
+
+char Trie::getCharacter(const int & value_) const{
+    /*
+    if(value_ + 65 > 90){
+        static int letter_ = value_ + 71;
+    }
+    else{
+        static int letter_ = value_ + 65;
+    }*/
+    int letter_{0};
+    /* Index value turns to appropriate ASCII value */
+    letter_ = value_ + 65;
+    /* handle lowercase letters */
+    if( letter_ > 90){
+        letter_ += 6;
+    }
+    char handle = letter_;
+    return handle;
+}
+
+/* Removes target word 
  * @word_: l-value string to be removed
  * @node: current trie node, recursive target
  * Postcondition: word_ is not longer valid target within trie
+ * node->isEndOfWord is set to false, no change in trie size
  */
 bool Trie::Remove(std::string && word_, trienode_project::TrieNode * & node){
-    /* There are five recursive conditions
-     * node points to nullptr
-     * Node has other children, is not end of word: call remove
-     * Node had other children, is end of word: change isEndOfWord to false, return true
-     * Node doesn't have other children, is not end of word: call remove, delete node
-     * Node doesn't have other children, is end of word: delete node, return true
-     */
-
     /* Node points to null, no such word*/
     if(node == nullptr ){
         return false;
     }
     // get current letter index
-    int letter_ = word_[0] - 'a';
-    //check if node has children
-    bool has_children = true;
-    for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-        //avoid testing current index
-        if(int(i) == letter_){ continue; }
-        else if(node->children[i] != nullptr){
-            has_children = false;
-            break;
-        }
-    };
-    //if node has other children
-    if(has_children){
-        if(!node->isEndOfWord){
-            return Remove(word_.substr(1), node->children[letter_]);
-        }
-        //is end of word
-        else{
-            node->isEndOfWord = false;
-            --number_of_words;
-            return true;
-        }
+    int letter_ = getIndex(word_[0]);
+    
+    /* if node isn't EndOfWord*/
+    /* and if is not at end of word */
+    /* handles the case if target word has already been deleted but exists in trie */
+    if(!node->isEndOfWord && word_.length() >= 1){
+        return Remove(word_.substr(1), node->children[letter_]);
     }
-    //does not have other children
+    /* iterated to end of word and isEndOfWord */
     else{
-        if(!node->isEndOfWord){
-            return Remove(word_.substr(1), node->children[letter_]);
-            delete node;
-            node = nullptr;
-        }
-        //is end of word
-        else{
-           delete node;
-           node = nullptr;
-           --number_of_words;
-           return true; 
-        }
+        node->isEndOfWord = false;
+        --number_of_words;
+        return true;
     }
-  }
+}
 
 /* Clears the trie of allocated data
- * @node: TrieNode used for crawling recursivly thru trie
+ * @node: TrieNode used for crawling recursivly thru trie; post-order traversal
  * Precondition: Trie is populated with data
  * Postcondition: Trie is depopulated and dynamically allocated data is removed
  */
@@ -189,49 +189,33 @@ void Trie::Clear(trienode_project::TrieNode * & node){
     if(node == nullptr){ return; }
     /* Loop thru array of TrieNodes */
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-        // node has children
+        // if node has children, clear their values
         if(node->children[i] != nullptr){
             Clear(node->children[i]);
         }
-        //node doesn't have children
-        else{
-            delete node;
-            node = nullptr;
-            return;
-        }
     }
-  }
+    /* finished iterating thru children */
+    delete node;
+    node = nullptr;
+    return; 
+}
 
-/* Counts nodes on demand
+/* Counts nodes on demand, post-order recursion
  * @node: TrieNode that crawls thru trie
  */
 unsigned int Trie::CountNodes(trienode_project::TrieNode * & node){
-    // IF node = nullptr return 0
-    // IF node isEndOfWord and has no children: return 1
-    // IF node has children: CountNodes(children[a]) + CountNodes(children[b])+...
-    unsigned int count{1};
+    unsigned int count{0};
 
+    /* Avoid counting an empty node */
     if(node == nullptr){
         return -1;
     }
-    bool has_children = false;
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
         if(node->children[i] != nullptr){
-            has_children = true;
-            break;
+            count += CountNodes(node->children[i]); 
         }
     }
-    //Node isEndOfWord and has no children
-    if(has_children == false){
-        return 1;
-    }
-    //Node has children
-    for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
-        if(node->children[i] != nullptr){
-            count = count + CountNodes(node->children[i]);//, count); 
-        }
-    }
-    return count;
+    return count + 1;
   }
 
 /* Prints all contents of Trie in alphabetical order */
@@ -244,8 +228,9 @@ void Trie::Print(trienode_project::TrieNode * & node, std::string & word_)const 
     for(int i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
         /* If child index isn't nullptr, it has a value */
         if(node->children[i] != nullptr){
-            int letter_ = i + int('a');
-            std::string full_word = word_ + char(letter_);
+            char letter_;
+            letter_ = getCharacter(i);
+            std::string full_word = word_ + letter_;
             Print(node->children[i], full_word);
         }
         else{
@@ -260,13 +245,15 @@ void Trie::Print(trienode_project::TrieNode * & node, std::string & word_)const 
  * Precondition: Trie will be populated with values
  */
 void Trie::getSuggested(std::string & word_, std::vector<std::string> & my_vector){
-    //std::string answer{};
     int letter{0};
     trienode_project::TrieNode * temp = root_;
 
     for(size_t i{0}; i < word_.length(); ++i){
-        //answer += word_[i];
-        letter = word_[i] - 'a';
+        letter = getIndex( word_[i]);
+        if(temp->children[letter] == nullptr){
+            std::cout << "Not a valid word.\n";
+            return;
+        }
         temp = temp->children[letter];
     }
     getSuggested(word_, my_vector, temp);
@@ -285,9 +272,11 @@ void Trie::getSuggested(std::string word_, std::vector<std::string> & my_vector,
     }
     for(size_t i = 0; i < trienode_project::ALPHABET_SIZE; ++i){
         std::string copy_{word_};
+        char value_;
         //children[i] isn't empty
         if(node->children[i] != nullptr){
-            copy_ += char(i + int('a'));
+            value_ = getCharacter(i);
+            copy_.push_back(value_);
             getSuggested(copy_, my_vector, node->children[i]);
         }
     }
